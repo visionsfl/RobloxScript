@@ -1,0 +1,33 @@
+-- leaderstats with datastore for roblox made by visions
+
+game.Players.PlayerAdded:Connect(function(player)
+local leaderstats = Instance.new("Folder")
+leaderstats.Name = "something"-- put the name of your currency orr stat here it can be anything
+leaderstats.Parent = player -- making the leaderstats folder be parented by the player
+
+local something = Instance.new("IntValue") -- giving your currency or stat a value
+something.Name = "something"-- again could be anything
+something.Parent = leaderstats -- making the currency or stat be parented by the leaderstats folder
+end)
+
+-- you can add more than one currency or stat since you can have multiple datat saves for the same player
+
+-- this is the datastore script this is whats going to save and store the players data
+
+local playerdata = game:GetService("DataStoreService"):GetDataStore("SaveData")
+game.Players.PlayerAdded:Connect(function(plr)
+    local plrid = "id_"..plr.UserId
+    local save1 = plr.leaderstats.something-- here you can add the name of your currency, if you used more than one save then repeat this line with save2 with the name of your currency or stat
+
+    local  DataSave = playerdata :GetAsync(plrid)
+    if DataSave then
+        save1.Value = DataSave[1] -- here you can add multiple saves just go one line down an add another save
+    else
+        local SaveNumber = {save1.Value} -- here you can add another save just add a comma next to value and put save2
+        DataSave:GetAsync(plrid,SaveNumber)
+    end
+end)
+
+game.Players.PlayerRemoving:Connect(function(plr)
+    DataSave:SetAsync("id_"..plr.UserId,{plr.leaderstats.something.Value, plr.leaderstats}) -- if you have more than one save here add a comma next to leaderstats and right the same thing with your other currency or stat
+end)
